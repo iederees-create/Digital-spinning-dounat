@@ -1,99 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Cleaning Services</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- For WhatsApp icon -->
-  <script src="script.js" defer></script> <!-- Link to script.js -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Retro spinning doughnut effect to showcase your data cleaning expertise.">
+    <title>Retro Spinning Doughnut</title>
+    <style>
+        body {
+            background-color: #263137; /* Dark background */
+            font-family: monospace; /* Retro font */
+            color: #fe5151; /* Red color for the text */
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #doughnut {
+            font-size: 12px;
+            line-height: 12px;
+            white-space: pre;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Data Cleaning Services</h1>
-    <p>Effortlessly transform your messy data into clean, usable formats. Send me an email or WhatsApp message to get started!</p>
-  </header>
+    <div id="doughnut"></div>
 
-  <section>
-    <h2>How It Works</h2>
-    <ol>
-      <li>Send me your data and specify what needs to be cleaned.</li>
-      <li>I'll clean it up and send it back to you.</li>
-    </ol>
-    <p><strong>Email:</strong> <a href="mailto:iedereesfrancis@gmail.com">iedereesfrancis@gmail.com</a></p>
-  </section>
+    <script>
+        // Variables for rotation angles
+        let A = 0, B = 0;
+        let z = new Array(1760).fill(0);  // Depth buffer for the 3D projection
+        let b = new Array(1760).fill(' '); // Char buffer for the 2D rendering
+        const doughnutElement = document.getElementById('doughnut');  // The container for the doughnut
 
-  <!-- Visual Scenarios Section -->
-  <section class="scenarios">
-    <h2>How Clean Data Can Help</h2>
+        // Function to generate and display the spinning doughnut effect
+        function generateDoughnut() {
+            // Reset buffers
+            b.fill(' ');
+            z.fill(0);
 
-    <!-- Scenario 1 -->
-    <div class="scenario">
-      <h3>Accurate Patient Data for Better Health Outcomes</h3>
-      <p>Healthcare providers rely on accurate patient data for diagnosis and treatment. Clean data improves patient outcomes and treatment efficiency.</p>
-      <canvas id="healthcareChart" width="400" height="200"></canvas> <!-- Healthcare Chart -->
-      <p>By cleaning patient data, healthcare providers can ensure more accurate diagnoses, leading to better patient outcomes.</p>
-    </div>
+            // Loop to generate the doughnut's ASCII projection
+            for (let j = 0; j < 6.28; j += 0.07) {
+                for (let i = 0; i < 6.28; i += 0.02) {
+                    const c = Math.sin(i),
+                          d = Math.cos(j),
+                          e = Math.sin(A),
+                          f = Math.sin(j),
+                          g = Math.cos(A),
+                          h = d + 2,
+                          D = 1 / (c * h * e + f * g + 5),
+                          l = Math.cos(i),
+                          m = Math.cos(B),
+                          n = Math.sin(B),
+                          t = c * h * g - f * e;
 
-    <!-- Scenario 2 -->
-    <div class="scenario">
-      <h3>Make Data-Driven Investment Decisions</h3>
-      <p>Financial analysts depend on accurate data to make decisions that affect billions. Clean financial data ensures better analysis and investment strategies.</p>
-      <canvas id="financeChart" width="400" height="200"></canvas> <!-- Finance Chart -->
-      <p>Clean financial data allows analysts to make precise investment decisions and improve ROI.</p>
-    </div>
+                    const x = Math.floor(40 + 30 * D * (l * h * m - t * n)),
+                          y = Math.floor(12 + 15 * D * (l * h * n + t * m)),
+                          o = x + 80 * y,
+                          N = Math.floor(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
 
-    <!-- Scenario 3 -->
-    <div class="scenario">
-      <h3>Ensure Accurate Public Policy Decisions with Clean Data</h3>
-      <p>Government agencies rely on clean data for decisions that impact public policy, ensuring accuracy and effectiveness.</p>
-      <canvas id="policyChart" width="400" height="200"></canvas> <!-- Public Policy Chart -->
-      <p>By using clean data, government agencies can make better decisions that positively impact public services and society.</p>
-    </div>
+                    if (y > 0 && y < 22 && x > 0 && x < 80 && D > z[o]) {
+                        z[o] = D;
+                        b[o] = ".,-~:;=!*#$@"[N > 0 ? N : 0];  // Character shading based on depth
+                    }
+                }
+            }
 
-    <!-- Scenario 4 -->
-    <div class="scenario">
-      <h3>Enhance Research with Clean and Reliable Data</h3>
-      <p>Researchers need clean data for academic work. Clean data leads to credible research and stronger conclusions.</p>
-      <canvas id="researchChart" width="400" height="200"></canvas> <!-- Research Chart -->
-      <p>With clean data, researchers can produce more reliable findings that contribute to advancements in their fields.</p>
-    </div>
+            // Update the display of the doughnut
+            doughnutElement.textContent = b.join('');
+            A += 0.04;
+            B += 0.02;
+        }
 
-    <!-- Scenario 5 -->
-    <div class="scenario">
-      <h3>Accurate Property Listings for Better Sales</h3>
-      <p>Real estate agents need accurate data for property listings, ensuring clients are presented with the right options and information.</p>
-      <canvas id="realEstateChart" width="400" height="200"></canvas> <!-- Real Estate Chart -->
-      <p>By cleaning property data, real estate agents can provide clients with the most accurate listings, improving the sales process.</p>
-    </div>
-
-    <!-- Scenario 6 -->
-    <div class="scenario">
-      <h3>Clean Data for Better Donor Engagement</h3>
-      <p>Non-profits benefit from clean donor data to improve engagement and enable more successful fundraising campaigns.</p>
-      <canvas id="donorEngagementChart" width="400" height="200"></canvas> <!-- Donor Engagement Chart -->
-      <p>Clean donor data helps non-profits better segment their audience and improve donation strategies.</p>
-    </div>
-
-    <!-- Scenario 7 -->
-    <div class="scenario">
-      <h3>Streamline Hiring with Clean Candidate Data</h3>
-      <p>HR professionals can streamline recruitment by using clean candidate data, improving matching and reducing hiring time.</p>
-      <canvas id="hiringChart" width="400" height="200"></canvas> <!-- Hiring Chart -->
-      <p>By cleaning candidate data, HR departments can make faster and more accurate hiring decisions, reducing hiring times.</p>
-    </div>
-
-  </section>
-
-  <!-- WhatsApp Floating Icon -->
-  <div class="whatsapp-icon">
-    <a href="https://wa.me/27845272182?text=Hello%2C%20I%20need%20data%20cleaning%20services" target="_blank">
-      <i class="fab fa-whatsapp"></i> Contact via WhatsApp
-    </a>
-  </div>
-
-  <footer>
-    <p>Powered by GitHub Pages | Contact: <a href="mailto:iedereesfrancis@gmail.com">iedereesfrancis@gmail.com</a></p>
-  </footer>
+        // Animation loop
+        setInterval(generateDoughnut, 50);  // Update the doughnut every 50ms
+    </script>
 </body>
 </html>
