@@ -1,75 +1,60 @@
-// Efficiency Chart - Animated Bar Chart showing time saved
-const efficiencyChartCtx = document.getElementById('efficiencyChart').getContext('2d');
-const efficiencyChart = new Chart(efficiencyChartCtx, {
+// Small Business Chart (Bar Chart)
+const smallBusinessCtx = document.getElementById('smallBusinessChart').getContext('2d');
+const smallBusinessChart = new Chart(smallBusinessCtx, {
   type: 'bar',
   data: {
-    labels: ['Raw Data', 'Clean Data'],
+    labels: ['Manual Process', 'After Data Cleaning'],
     datasets: [{
-      label: 'Time Saved (Hours)',
-      data: [15, 5],
-      backgroundColor: ['rgba(220, 53, 69, 0.7)', 'rgba(40, 167, 69, 0.7)'],
-      borderColor: ['rgba(220, 53, 69, 1)', 'rgba(40, 167, 69, 1)'],
-      borderWidth: 1,
-      animation: {
-        duration: 2000,  // Animation duration (2 seconds)
-        easing: 'easeInOutCubic',
-      },
+      label: 'Time Saved (hours)',
+      data: [40, 15],
+      backgroundColor: ['#ffcc00', '#007bff'],
     }]
   },
   options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 20,  // Max value to visualize the difference
-      },
+    animation: {
+      duration: 2000, // Animation duration
+      easing: 'easeOutQuart',
     },
   }
 });
 
-// Results Chart - Animated Pie Chart showing improved ROI
-const resultsChartCtx = document.getElementById('resultsChart').getContext('2d');
-const resultsChart = new Chart(resultsChartCtx, {
+// Marketing Campaign Success (Pie Chart)
+const marketingCtx = document.getElementById('marketingChart').getContext('2d');
+const marketingChart = new Chart(marketingCtx, {
   type: 'pie',
   data: {
-    labels: ['Targeted Audience', 'Unfocused Audience'],
+    labels: ['Unclean Data', 'Clean Data'],
     datasets: [{
-      label: 'Marketing Results (Clean Data)',
-      data: [80, 20],
-      backgroundColor: ['rgba(0, 123, 255, 0.7)', 'rgba(108, 117, 125, 0.7)'],
-      borderColor: ['rgba(0, 123, 255, 1)', 'rgba(108, 117, 125, 1)'],
-      borderWidth: 1,
-      animation: {
-        animateRotate: true,
-        duration: 2000,
-        easing: 'easeInOutQuad',
-      },
+      label: 'Marketing ROI',
+      data: [30, 70],
+      backgroundColor: ['#ff6347', '#4caf50'],
     }]
   },
   options: {
-    responsive: true,
+    animation: {
+      duration: 2000, 
+      easing: 'easeOutQuart',
+    },
   }
 });
 
-// Report Chart - Animated Radar Chart showing report quality
-const reportChartCtx = document.getElementById('reportChart').getContext('2d');
-const reportChart = new Chart(reportChartCtx, {
-  type: 'radar',
+// E-commerce Sales (Line Chart)
+const ecommerceCtx = document.getElementById('ecommerceChart').getContext('2d');
+const ecommerceChart = new Chart(ecommerceCtx, {
+  type: 'line',
   data: {
-    labels: ['Accuracy', 'Clarity', 'Speed', 'Cost', 'Efficiency'],
+    labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [{
-      label: 'Report Quality (Clean Data)',
-      data: [85, 90, 80, 70, 95],
-      backgroundColor: 'rgba(0, 123, 255, 0.2)',
-      borderColor: 'rgba(0, 123, 255, 1)',
-      borderWidth: 1,
-      animation: {
-        duration: 2000,
-        easing: 'easeInOutQuad',
-      },
+      label: 'Sales Increase',
+      data: [5000, 8000, 10000, 12000, 15000],
+      borderColor: '#4caf50',
+      fill: false,
     }]
   },
   options: {
-    responsive: true,
+    animation: {
+      duration: 2000,
+      easing: 'easeOutQuart',
+    },
   }
 });
