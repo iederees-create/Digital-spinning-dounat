@@ -1,88 +1,111 @@
-/* General Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+// Business Insights Chart
+const businessChartCtx = document.getElementById('businessChart').getContext('2d');
+const businessChart = new Chart(businessChartCtx, {
+  type: 'line',
+  data: {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+    datasets: [{
+      label: 'Business Insights (Clean Data)',
+      data: [45, 60, 75, 85, 95],
+      borderColor: 'rgba(0, 123, 255, 1)',
+      backgroundColor: 'rgba(0, 123, 255, 0.2)',
+      fill: true,
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+      },
+    },
+  }
+});
 
-header {
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
+// Efficiency Chart
+const efficiencyChartCtx = document.getElementById('efficiencyChart').getContext('2d');
+const efficiencyChart = new Chart(efficiencyChartCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Raw Data', 'Clean Data'],
+    datasets: [{
+      label: 'Time Saved (Hours)',
+      data: [15, 5],
+      backgroundColor: ['rgba(220, 53, 69, 0.7)', 'rgba(40, 167, 69, 0.7)'],
+      borderColor: ['rgba(220, 53, 69, 1)', 'rgba(40, 167, 69, 1)'],
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+});
 
-header h1 {
-  margin: 0;
-  font-size: 36px;
-}
+// Results Chart
+const resultsChartCtx = document.getElementById('resultsChart').getContext('2d');
+const resultsChart = new Chart(resultsChartCtx, {
+  type: 'pie',
+  data: {
+    labels: ['Targeted Audience', 'Unfocused Audience'],
+    datasets: [{
+      label: 'Marketing Results (Clean Data)',
+      data: [80, 20],
+      backgroundColor: ['rgba(0, 123, 255, 0.7)', 'rgba(108, 117, 125, 0.7)'],
+      borderColor: ['rgba(0, 123, 255, 1)', 'rgba(108, 117, 125, 1)'],
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    responsive: true,
+  }
+});
 
-header p {
-  margin: 10px 0;
-  font-size: 18px;
-}
+// Analytics Chart
+const analyticsChartCtx = document.getElementById('analyticsChart').getContext('2d');
+const analyticsChart = new Chart(analyticsChartCtx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    datasets: [{
+      label: 'Analytics Accuracy (Clean Data)',
+      data: [60, 70, 80, 90, 95],
+      borderColor: 'rgba(40, 167, 69, 1)',
+      backgroundColor: 'rgba(40, 167, 69, 0.2)',
+      fill: true,
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+      },
+    },
+  }
+});
 
-section {
-  margin: 20px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-section h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-section ol {
-  margin-left: 20px;
-}
-
-.scenario {
-  margin-bottom: 30px;
-}
-
-.scenario h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-canvas {
-  display: block;
-  margin: 20px 0;
-  max-width: 100%;
-}
-
-/* WhatsApp Icon */
-.whatsapp-icon {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #25d366;
-  color: white;
-  padding: 15px;
-  border-radius: 50%;
-  font-size: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.whatsapp-icon a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #007bff;
-  color: white;
-}
-
-footer a {
-  color: white;
-  text-decoration: none;
-}
+// Report Chart
+const reportChartCtx = document.getElementById('reportChart').getContext('2d');
+const reportChart = new Chart(reportChartCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Accuracy', 'Clarity', 'Speed', 'Cost', 'Efficiency'],
+    datasets: [{
+      label: 'Report Quality (Clean Data)',
+      data: [85, 90, 80, 70, 95],
+      backgroundColor: 'rgba(0, 123, 255, 0.2)',
+      borderColor: 'rgba(0, 123, 255, 1)',
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    responsive: true,
+  }
+});
