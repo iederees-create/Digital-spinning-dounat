@@ -1,4 +1,63 @@
-// Small Business Chart (Bar Chart)
+// Existing charts (Efficiency, Results, Reports)
+const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+const efficiencyChart = new Chart(efficiencyCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Before', 'After'],
+    datasets: [{
+      label: 'Efficiency',
+      data: [30, 90],
+      backgroundColor: ['#ffcc00', '#007bff'],
+    }]
+  },
+  options: {
+    animation: {
+      duration: 2000, // Animation duration
+      easing: 'easeOutQuart',
+    },
+  }
+});
+
+const resultsCtx = document.getElementById('resultsChart').getContext('2d');
+const resultsChart = new Chart(resultsCtx, {
+  type: 'pie',
+  data: {
+    labels: ['Unclean Data', 'Clean Data'],
+    datasets: [{
+      label: 'Marketing ROI',
+      data: [30, 70],
+      backgroundColor: ['#ff6347', '#4caf50'],
+    }]
+  },
+  options: {
+    animation: {
+      duration: 2000,
+      easing: 'easeOutQuart',
+    },
+  }
+});
+
+const reportsCtx = document.getElementById('reportsChart').getContext('2d');
+const reportsChart = new Chart(reportsCtx, {
+  type: 'line',
+  data: {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    datasets: [{
+      label: 'Report Accuracy',
+      data: [50, 70, 80, 100],
+      borderColor: '#4caf50',
+      fill: false,
+    }]
+  },
+  options: {
+    animation: {
+      duration: 2000,
+      easing: 'easeOutQuart',
+    },
+  }
+});
+
+// New scenarios charts
 const smallBusinessCtx = document.getElementById('smallBusinessChart').getContext('2d');
 const smallBusinessChart = new Chart(smallBusinessCtx, {
   type: 'bar',
@@ -18,7 +77,6 @@ const smallBusinessChart = new Chart(smallBusinessCtx, {
   }
 });
 
-// Marketing Campaign Success (Pie Chart)
 const marketingCtx = document.getElementById('marketingChart').getContext('2d');
 const marketingChart = new Chart(marketingCtx, {
   type: 'pie',
@@ -38,7 +96,6 @@ const marketingChart = new Chart(marketingCtx, {
   }
 });
 
-// E-commerce Sales (Line Chart)
 const ecommerceCtx = document.getElementById('ecommerceChart').getContext('2d');
 const ecommerceChart = new Chart(ecommerceCtx, {
   type: 'line',
@@ -58,3 +115,5 @@ const ecommerceChart = new Chart(ecommerceCtx, {
     },
   }
 });
+
+// Additional scenarios would be added here in the same way.
