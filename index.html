@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Cleaning Services</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- For WhatsApp icon -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For Chart.js -->
   <script src="script.js" defer></script> <!-- Link to script.js -->
 </head>
 <body>
@@ -27,6 +27,7 @@
   <section class="scenarios">
     <h2>How Clean Data Can Help</h2>
 
+    <!-- Business Insights Scenario -->
     <div class="scenario">
       <h3>Unlock Business Insights</h3>
       <p>Clear, structured data empowers businesses to make faster and better decisions. Here's how clean data helps reveal actionable insights.</p>
@@ -34,28 +35,32 @@
       <p>Data insights are crucial for decision-making. This visualization shows how cleaning up the data leads to more reliable business forecasts.</p>
     </div>
 
+    <!-- Efficiency Scenario -->
     <div class="scenario">
       <h3>Increase Efficiency</h3>
       <p>With clean data, processes become more efficient, saving time and reducing errors. Let us help you streamline your data for faster outcomes.</p>
-      <img src="images/efficiency_scenario.png" alt="Efficiency Scenario">
+      <canvas id="efficiencyChart" width="400" height="200"></canvas> <!-- Efficiency Chart -->
     </div>
 
+    <!-- Results Scenario -->
     <div class="scenario">
       <h3>Drive Better Results</h3>
       <p>Clean data fuels better marketing campaigns, helping you target the right customers and improve your ROI.</p>
-      <img src="images/results_scenario.png" alt="Results Scenario">
+      <canvas id="resultsChart" width="400" height="200"></canvas> <!-- Results Chart -->
     </div>
 
+    <!-- Analytics Scenario -->
     <div class="scenario">
       <h3>Improve Analytics</h3>
       <p>Structured data ensures that your analytics are accurate, providing valuable insights for long-term growth.</p>
       <canvas id="analyticsChart" width="400" height="200"></canvas> <!-- Analytics Chart -->
     </div>
 
+    <!-- Reports Scenario -->
     <div class="scenario">
       <h3>Transform Your Reports</h3>
       <p>Turn your raw data into insightful reports that tell the full story. Let clean data be the foundation of your business reports.</p>
-      <img src="images/report_scenario.png" alt="Report Scenario">
+      <canvas id="reportChart" width="400" height="200"></canvas> <!-- Report Chart -->
     </div>
 
   </section>
