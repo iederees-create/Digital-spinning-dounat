@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spinning Donut</title>
+  <title>Spinning Donut (Mobile Optimized)</title>
   <style>
     body {
       margin: 0;
@@ -25,34 +25,33 @@
     const canvas = document.getElementById("donutCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Resize canvas to fit the window
+    // Set canvas size to match the screen dimensions
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const width = canvas.width;
     const height = canvas.height;
 
-    const R1 = 0.5; // Radius of the small circle
-    const R2 = 1.5; // Distance to the center of the torus
-    const K1 = 150; // Scaling factor for projection
+    const R1 = 0.5; // Small circle radius
+    const R2 = 1.5; // Torus radius
+    const K1 = Math.min(width, height) / 4; // Scaling for mobile
     const K2 = 5; // Distance offset
 
-    let A = 0; // Rotation angle around X-axis
-    let B = 0; // Rotation angle around Z-axis
+    let A = 0; // Rotation around X-axis
+    let B = 0; // Rotation around Z-axis
 
     function drawDonut() {
-      // Clear the canvas
+      // Clear canvas
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, width, height);
 
-      // Z-buffer and character buffer
       const zBuffer = Array(width * height).fill(0);
       const chars = ".,-~:;=!*#$@";
       const charBuffer = Array(width * height).fill(" ");
 
-      // Loop through angles to draw the donut
-      for (let theta = 0; theta < Math.PI * 2; theta += 0.07) {
-        for (let phi = 0; phi < Math.PI * 2; phi += 0.02) {
+      // Loop through angles for the donut
+      for (let theta = 0; theta < Math.PI * 2; theta += 0.1) {
+        for (let phi = 0; phi < Math.PI * 2; phi += 0.05) {
           const sinTheta = Math.sin(theta);
           const cosTheta = Math.cos(theta);
           const sinPhi = Math.sin(phi);
@@ -83,30 +82,37 @@
           const idx = Math.floor(xp + yp * width);
           if (idx >= 0 && idx < zBuffer.length && ooz > zBuffer[idx]) {
             zBuffer[idx] = ooz;
-            charBuffer[idx] = chars[Math.floor(Math.max(0, luminance) * 8)];
+            const charIndex = Math.floor(Math.max(0, luminance) * (chars.length - 1));
+            charBuffer[idx] = chars[charIndex];
           }
         }
       }
 
       // Draw characters onto the canvas
-      ctx.font = "12px monospace";
+      ctx.font = `${Math.max(10, width / 100)}px monospace`; // Adjust font size for mobile
       ctx.fillStyle = "white";
 
       for (let i = 0; i < charBuffer.length; i++) {
         const x = i % width;
         const y = Math.floor(i / width);
         if (charBuffer[i] !== " ") {
-          ctx.fillText(charBuffer[i], x * 5, y * 8); // Adjust scale for readability
+          ctx.fillText(charBuffer[i], x * 6, y * 8); // Adjust scaling for readability
         }
       }
     }
 
     function animate() {
-      A += 0.04;
-      B += 0.02;
+      A += 0.03; // Adjust speed for smoother mobile animation
+      B += 0.015;
       drawDonut();
       requestAnimationFrame(animate);
     }
+
+    // Recalculate canvas size on window resize
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
 
     animate();
   </script>
