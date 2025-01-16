@@ -7,12 +7,12 @@
   <style>
     body {
       margin: 0;
-      overflow: hidden;
       background-color: black;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
     canvas {
       display: block;
@@ -24,44 +24,63 @@
   <script>
     const canvas = document.getElementById("donutCanvas");
     const ctx = canvas.getContext("2d");
+
+    // Resize canvas to fit the window
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const width = canvas.width;
     const height = canvas.height;
+
     const R1 = 0.5; // Radius of the small circle
-    const R2 = 1; // Distance to the center of the torus
-    const K1 = 200; // Scale factor
-    const K2 = 5; // Depth factor
-    let A = 0, B = 0; // Rotation angles
+    const R2 = 1.5; // Distance to the center of the torus
+    const K1 = 150; // Scaling factor for projection
+    const K2 = 5; // Distance offset
+
+    let A = 0; // Rotation angle around X-axis
+    let B = 0; // Rotation angle around Z-axis
 
     function drawDonut() {
-      ctx.clearRect(0, 0, width, height);
+      // Clear the canvas
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, width, height);
 
+      // Z-buffer and character buffer
       const zBuffer = Array(width * height).fill(0);
-      const charBuffer = Array(width * height).fill(" ");
       const chars = ".,-~:;=!*#$@";
+      const charBuffer = Array(width * height).fill(" ");
 
+      // Loop through angles to draw the donut
       for (let theta = 0; theta < Math.PI * 2; theta += 0.07) {
         for (let phi = 0; phi < Math.PI * 2; phi += 0.02) {
-          const cosTheta = Math.cos(theta), sinTheta = Math.sin(theta);
-          const cosPhi = Math.cos(phi), sinPhi = Math.sin(phi);
+          const sinTheta = Math.sin(theta);
+          const cosTheta = Math.cos(theta);
+          const sinPhi = Math.sin(phi);
+          const cosPhi = Math.cos(phi);
 
           const circleX = R2 + R1 * cosTheta;
           const circleY = R1 * sinTheta;
 
-          const x = circleX * (Math.cos(B) * cosPhi + Math.sin(A) * Math.sin(B) * sinPhi) - circleY * Math.cos(A) * Math.sin(B);
-          const y = circleX * (Math.sin(B) * cosPhi - Math.sin(A) * Math.cos(B) * sinPhi) + circleY * Math.cos(A) * Math.cos(B);
+          // 3D transformation
+          const x = circleX * (Math.cos(B) * cosPhi + Math.sin(A) * Math.sin(B) * sinPhi) -
+                    circleY * Math.cos(A) * Math.sin(B);
+          const y = circleX * (Math.sin(B) * cosPhi - Math.sin(A) * Math.cos(B) * sinPhi) +
+                    circleY * Math.cos(A) * Math.cos(B);
           const z = K2 + Math.cos(A) * circleX * sinPhi + circleY * Math.sin(A);
-          const ooz = 1 / z;
 
+          // Perspective projection
+          const ooz = 1 / z;
           const xp = Math.floor(width / 2 + K1 * ooz * x);
           const yp = Math.floor(height / 2 - K1 * ooz * y);
 
-          const idx = Math.floor(xp + yp * width);
-          const luminance = cosPhi * cosTheta * Math.sin(B) - Math.cos(A) * cosTheta * sinPhi -
-                            Math.sin(A) * sinTheta + Math.cos(B) * (Math.cos(A) * sinTheta - cosTheta * Math.sin(A) * sinPhi);
+          // Compute luminance
+          const luminance = cosPhi * cosTheta * Math.sin(B) -
+                            Math.cos(A) * cosTheta * sinPhi -
+                            Math.sin(A) * sinTheta +
+                            Math.cos(B) * (Math.cos(A) * sinTheta - cosTheta * Math.sin(A) * sinPhi);
 
+          // Update buffer if point is closer
+          const idx = Math.floor(xp + yp * width);
           if (idx >= 0 && idx < zBuffer.length && ooz > zBuffer[idx]) {
             zBuffer[idx] = ooz;
             charBuffer[idx] = chars[Math.floor(Math.max(0, luminance) * 8)];
@@ -69,16 +88,15 @@
         }
       }
 
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, width, height);
-      ctx.font = "10px monospace";
+      // Draw characters onto the canvas
+      ctx.font = "12px monospace";
       ctx.fillStyle = "white";
 
       for (let i = 0; i < charBuffer.length; i++) {
         const x = i % width;
         const y = Math.floor(i / width);
         if (charBuffer[i] !== " ") {
-          ctx.fillText(charBuffer[i], x * 6, y * 10); // Scale to fit canvas
+          ctx.fillText(charBuffer[i], x * 5, y * 8); // Adjust scale for readability
         }
       }
     }
