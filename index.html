@@ -3,116 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spinning Donut (Mobile Optimized)</title>
+  <title>Spinning Donut (High Contrast)</title>
   <style>
     body {
       margin: 0;
       background-color: black;
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      font-family: monospace;
     }
-    canvas {
-      display: block;
+    pre {
+      font-size: 10px; /* Dynamically adjusted for mobile readability */
+      line-height: 10px; /* Prevents overlapping */
+      white-space: pre; /* Maintains ASCII art format */
+      margin: 0;
     }
   </style>
 </head>
 <body>
-  <canvas id="donutCanvas"></canvas>
+  <pre id="donut"></pre>
   <script>
-    const canvas = document.getElementById("donutCanvas");
-    const ctx = canvas.getContext("2d");
+    const pre = document.getElementById("donut");
 
-    // Set canvas size to match the screen dimensions
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Donut constants
+    const R1 = 1; // Inner radius
+    const R2 = 2; // Outer radius
+    const K1 = 15; // Distance multiplier (scaling factor)
+    const K2 = 5; // Depth offset
 
-    const width = canvas.width;
-    const height = canvas.height;
-
-    const R1 = 0.5; // Small circle radius
-    const R2 = 1.5; // Torus radius
-    const K1 = Math.min(width, height) / 4; // Scaling for mobile
-    const K2 = 5; // Distance offset
-
-    let A = 0; // Rotation around X-axis
-    let B = 0; // Rotation around Z-axis
+    // Resolution and frames
+    const screenWidth = 60; // Number of characters across
+    const screenHeight = 30; // Number of rows
+    const thetaStep = 0.07; // Step size for theta
+    const phiStep = 0.02; // Step size for phi
+    let A = 0; // Rotation angle for X-axis
+    let B = 0; // Rotation angle for Z-axis
 
     function drawDonut() {
-      // Clear canvas
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, width, height);
+      // Clear screen buffer
+      const buffer = new Array(screenWidth * screenHeight).fill(" ");
+      const zBuffer = new Array(screenWidth * screenHeight).fill(0);
 
-      const zBuffer = Array(width * height).fill(0);
-      const chars = ".,-~:;=!*#$@";
-      const charBuffer = Array(width * height).fill(" ");
-
-      // Loop through angles for the donut
-      for (let theta = 0; theta < Math.PI * 2; theta += 0.1) {
-        for (let phi = 0; phi < Math.PI * 2; phi += 0.05) {
+      for (let theta = 0; theta < 2 * Math.PI; theta += thetaStep) {
+        for (let phi = 0; phi < 2 * Math.PI; phi += phiStep) {
           const sinTheta = Math.sin(theta);
           const cosTheta = Math.cos(theta);
           const sinPhi = Math.sin(phi);
           const cosPhi = Math.cos(phi);
 
+          // Torus coordinates in 3D
           const circleX = R2 + R1 * cosTheta;
           const circleY = R1 * sinTheta;
 
-          // 3D transformation
-          const x = circleX * (Math.cos(B) * cosPhi + Math.sin(A) * Math.sin(B) * sinPhi) -
+          const x = circleX * (cosPhi * Math.cos(B) + sinPhi * Math.sin(A) * Math.sin(B)) -
                     circleY * Math.cos(A) * Math.sin(B);
-          const y = circleX * (Math.sin(B) * cosPhi - Math.sin(A) * Math.cos(B) * sinPhi) +
+          const y = circleX * (cosPhi * Math.sin(B) - sinPhi * Math.sin(A) * Math.cos(B)) +
                     circleY * Math.cos(A) * Math.cos(B);
           const z = K2 + Math.cos(A) * circleX * sinPhi + circleY * Math.sin(A);
 
-          // Perspective projection
           const ooz = 1 / z;
-          const xp = Math.floor(width / 2 + K1 * ooz * x);
-          const yp = Math.floor(height / 2 - K1 * ooz * y);
 
-          // Compute luminance
-          const luminance = cosPhi * cosTheta * Math.sin(B) -
-                            Math.cos(A) * cosTheta * sinPhi -
-                            Math.sin(A) * sinTheta +
-                            Math.cos(B) * (Math.cos(A) * sinTheta - cosTheta * Math.sin(A) * sinPhi);
+          const xp = Math.floor(screenWidth / 2 + K1 * ooz * x);
+          const yp = Math.floor(screenHeight / 2 - K1 * ooz * y);
 
-          // Update buffer if point is closer
-          const idx = Math.floor(xp + yp * width);
-          if (idx >= 0 && idx < zBuffer.length && ooz > zBuffer[idx]) {
-            zBuffer[idx] = ooz;
-            const charIndex = Math.floor(Math.max(0, luminance) * (chars.length - 1));
-            charBuffer[idx] = chars[charIndex];
+          // Luminance calculation
+          const L = cosPhi * cosTheta * Math.sin(B) -
+                    Math.cos(A) * cosTheta * sinPhi -
+                    Math.sin(A) * sinTheta +
+                    Math.cos(B) * (Math.cos(A) * sinTheta - cosTheta * Math.sin(A) * sinPhi);
+
+          if (L > 0) {
+            const index = Math.floor(xp + yp * screenWidth);
+            if (index >= 0 && index < buffer.length && ooz > zBuffer[index]) {
+              zBuffer[index] = ooz;
+              const luminanceIndex = Math.floor(L * 8);
+              const luminanceChars = ".,-~:;=!*#$@"; // Higher luminance gets brighter chars
+              buffer[index] = luminanceChars[luminanceIndex];
+            }
           }
         }
       }
 
-      // Draw characters onto the canvas
-      ctx.font = `${Math.max(10, width / 100)}px monospace`; // Adjust font size for mobile
-      ctx.fillStyle = "white";
-
-      for (let i = 0; i < charBuffer.length; i++) {
-        const x = i % width;
-        const y = Math.floor(i / width);
-        if (charBuffer[i] !== " ") {
-          ctx.fillText(charBuffer[i], x * 6, y * 8); // Adjust scaling for readability
-        }
+      // Render buffer to the screen
+      let output = "";
+      for (let i = 0; i < buffer.length; i++) {
+        output += buffer[i];
+        if ((i + 1) % screenWidth === 0) output += "\n";
       }
+      pre.textContent = output;
     }
 
     function animate() {
-      A += 0.03; // Adjust speed for smoother mobile animation
-      B += 0.015;
+      A += 0.04; // Rotation speed
+      B += 0.02; // Rotation speed
       drawDonut();
       requestAnimationFrame(animate);
     }
-
-    // Recalculate canvas size on window resize
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
 
     animate();
   </script>
