@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spinning Donut (High Contrast)</title>
+  <title>Spinning Donut with Company Name</title>
   <style>
     body {
       margin: 0;
@@ -42,6 +42,8 @@
     const phiStep = 0.02; // Step size for phi
     let A = 0; // Rotation angle for X-axis
     let B = 0; // Rotation angle for Z-axis
+
+    const companyName = "NEXTGENWEBS"; // Replace with your company name
 
     function drawDonut() {
       // Clear screen buffer
@@ -82,7 +84,13 @@
               zBuffer[index] = ooz;
               const luminanceIndex = Math.floor(L * 8);
               const luminanceChars = ".,-~:;=!*#$@"; // Higher luminance gets brighter chars
-              buffer[index] = luminanceChars[luminanceIndex];
+
+              // Insert company name at specific indices
+              if (Math.floor(yp) === Math.floor(screenHeight / 2) && xp >= 20 && xp < 20 + companyName.length) {
+                buffer[index] = companyName[xp - 20];
+              } else {
+                buffer[index] = luminanceChars[luminanceIndex];
+              }
             }
           }
         }
