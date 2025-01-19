@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Matrix-like animation using JavaScript and HTML with images">
-    <title>Matrix Effect with Image</title>
+    <meta name="description" content="Matrix-like animation using JavaScript and HTML">
+    <title>Matrix Effect</title>
     <style>
         * {
             margin: 0;
@@ -26,10 +26,20 @@
         canvas {
             display: block;
         }
+        #overlayText {
+            position: absolute;
+            color: rgba(0, 255, 0, 1);
+            font-size: 40px;
+            font-family: monospace;
+            z-index: 2;
+            text-align: center;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
     <canvas id="matrixCanvas"></canvas>
+    <div id="overlayText">Welcome to NextGenWebs</div>
     <script>
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
@@ -42,97 +52,42 @@
         const columns = Math.floor(canvas.width / 20); // Number of columns
         const drops = Array(columns).fill(0); // Array to store drop positions
 
-        // Image URL to be displayed as ASCII art
-        const imgSrc = 'https://via.placeholder.com/100'; // Use your image URL here
+        // Matrix character set
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~";
 
-        const image = new Image();
-        image.src = imgSrc;
+        // Function to draw matrix effect
+        function draw() {
+            // Clear screen with slight transparency
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        image.onload = function() {
-            // Once the image is loaded, start the matrix effect
-            convertImageToMatrix(image);
-        };
+            // Set glowing green color
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';  // Bright green with some transparency
+            ctx.font = '20px monospace';
 
-        // Map grayscale values to characters for ASCII art
-        const chars = "@%#*+=-:. "; // Characters from dark to light
+            // Loop through each drop in the matrix
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];  // Random character
+                ctx.fillText(text, i * 20, drops[i] * 20);
 
-        // Function to convert image into ASCII art and store in a matrix array
-        function convertImageToMatrix(image) {
-            const imgWidth = 100;  // width of the image for ASCII art
-            const imgHeight = 100; // height of the image for ASCII art
-            const canvasImg = document.createElement('canvas');
-            const ctxImg = canvasImg.getContext('2d');
-            canvasImg.width = imgWidth;
-            canvasImg.height = imgHeight;
-
-            // Draw the image to the offscreen canvas
-            ctxImg.drawImage(image, 0, 0, imgWidth, imgHeight);
-            const imgData = ctxImg.getImageData(0, 0, imgWidth, imgHeight);
-            const pixels = imgData.data;
-
-            // Create a 2D array for the ASCII representation of the image
-            const asciiImage = [];
-            for (let i = 0; i < imgHeight; i++) {
-                let row = '';
-                for (let j = 0; j < imgWidth; j++) {
-                    const index = (i * imgWidth + j) * 4;
-                    const r = pixels[index];
-                    const g = pixels[index + 1];
-                    const b = pixels[index + 2];
-                    const brightness = (r + g + b) / 3; // Grayscale brightness
-                    const charIndex = Math.floor((brightness / 255) * (chars.length - 1)); // Map brightness to a character
-                    row += chars[charIndex];
+                // Reset drop position after it moves past the screen height
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
-                asciiImage.push(row);
-            }
 
-            // Now that we have the ASCII image, we can use it in the matrix effect
-            displayAsciiMatrix(asciiImage);
+                // Move drop down
+                drops[i]++;
+            }
         }
 
-        // Function to display ASCII art inside the matrix effect
-        function displayAsciiMatrix(asciiImage) {
-            const rows = asciiImage.length;
-
-            // Matrix effect settings
-            const dropPositions = Array(columns).fill(0); // Drop positions for each column
-
-            function draw() {
-                // Clear the screen with slight transparency
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Set glowing green color for text
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
-                ctx.font = '20px monospace';
-
-                // Loop through each drop in the matrix
-                for (let i = 0; i < drops.length; i++) {
-                    // Get the character from the ASCII art image
-                    const char = asciiImage[drops[i] % rows][i % asciiImage[0].length];
-
-                    // Draw the character
-                    ctx.fillText(char, i * 20, drops[i] * 20);
-
-                    // Reset drop position after it moves past the screen height
-                    if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-
-                    // Move drop down
-                    drops[i]++;
-                }
-            }
-
-            // Animation loop to update the matrix effect with ASCII art
-            function update() {
-                draw();
-                requestAnimationFrame(update);
-            }
-
-            // Start the animation loop
-            update();
+        // Animation loop to update the matrix effect
+        function update() {
+            draw();
+            requestAnimationFrame(update);
         }
+
+        // Start the animation loop
+        update();
     </script>
 </body>
 </html>
