@@ -20,6 +20,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0;
+            padding: 0;
         }
         canvas {
             display: block;
@@ -37,24 +39,28 @@
         canvas.height = window.innerHeight;
 
         // Matrix effect settings
-        const columns = canvas.width / 20; // Number of columns
+        const columns = Math.floor(canvas.width / 20); // Number of columns
         const drops = Array(columns).fill(0); // Array to store drop positions
 
-        // Colors for the Matrix effect (greenish)
-        const hue = 120;
+        // Matrix character set
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~";
 
+        // Function to draw matrix effect
         function draw() {
+            // Clear screen with slight transparency
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;  // Set the color for text
+            // Set glowing green color
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';  // Bright green with some transparency
             ctx.font = '20px monospace';
 
+            // Loop through each drop in the matrix
             for (let i = 0; i < drops.length; i++) {
-                const text = Math.random() < 0.5 ? '.' : '#';  // Random character
+                const text = chars[Math.floor(Math.random() * chars.length)];  // Random character
                 ctx.fillText(text, i * 20, drops[i] * 20);
 
-                // Reset drop position after reaching bottom of canvas
+                // Reset drop position after it moves past the screen height
                 if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
@@ -64,13 +70,13 @@
             }
         }
 
-        // Animation loop
+        // Animation loop to update the matrix effect
         function update() {
             draw();
             requestAnimationFrame(update);
         }
 
-        // Start the animation
+        // Start the animation loop
         update();
     </script>
 </body>
