@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Matrix-like animation with a 3D spinning donut effect">
     <title>Matrix Effect with Spinning Donut</title>
     <style>
         * {
@@ -68,7 +67,7 @@
 
         // Draw the spinning donut (3D torus)
         function drawDonut() {
-            const output = [' '] * (canvas.width * canvas.height / 400); // Array to store donut's pixels
+            const output = Array(canvas.width * canvas.height / 400).fill(' '); // Array to store donut's pixels
             const zbuffer = Array(output.length).fill(0);
 
             const donutWidth = 60;
