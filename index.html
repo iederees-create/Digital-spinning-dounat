@@ -13,16 +13,13 @@
         }
         body {
             background-color: black;
-            color: #00FF00;
-            font-family: monospace;
-            height: 100vh;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            font-family: monospace;
         }
         canvas {
             display: block;
@@ -34,30 +31,24 @@
     <script>
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
-
-        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         // Matrix effect settings
         const columns = Math.floor(canvas.width / 20); // Number of columns
         const drops = Array(columns).fill(0); // Array to store drop positions
-
-        // Matrix character set
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~";
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~"; // Matrix characters
 
         // Spinning donut effect settings
         const R1 = 10, R2 = 20, K2 = 200, K1 = canvas.height * K2 * 3 / (8 * (R1 + R2));
         const thetaSpacing = 10, phiSpacing = 3;
         let A = 0, B = 0;  // Rotation angles
-
-        // Donut symbol set
-        const donutChars = "._.,*#@";
+        const donutChars = "._.,*#@"; // Donut characters
 
         // Draw the matrix effect
         function drawMatrix() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, canvas.width, canvas.height); // Apply fading effect
 
             // Set glowing green color for matrix characters
             ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
@@ -82,9 +73,7 @@
 
             const donutWidth = 60;
             const donutHeight = 20;
-
-            // Position the donut in the center
-            const donutX = canvas.width / 2 - donutWidth / 2;
+            const donutX = canvas.width / 2 - donutWidth / 2; // Center donut on screen
             const donutY = canvas.height / 2 - donutHeight / 2;
 
             for (let theta = 0; theta < 628; theta += thetaSpacing) {
@@ -129,8 +118,8 @@
 
         // Animation loop to update the matrix and donut effects
         function update() {
-            drawMatrix();
-            drawDonut();
+            drawMatrix(); // Draw matrix as background
+            drawDonut();  // Draw donut on top
             A += 0.1;
             B += 0.03;
             requestAnimationFrame(update);
