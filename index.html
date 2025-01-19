@@ -22,6 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
         canvas {
             display: block;
@@ -50,6 +51,9 @@
         const thetaSpacing = 10, phiSpacing = 3;
         let A = 0, B = 0;  // Rotation angles
 
+        // Donut symbol set
+        const donutChars = "._.,*#@";
+
         // Draw the matrix effect
         function drawMatrix() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -76,6 +80,13 @@
             const output = [' '] * (canvas.width * canvas.height / 400); // Array to store donut's pixels
             const zbuffer = Array(output.length).fill(0);
 
+            const donutWidth = 60;
+            const donutHeight = 20;
+
+            // Position the donut in the center
+            const donutX = canvas.width / 2 - donutWidth / 2;
+            const donutY = canvas.height / 2 - donutHeight / 2;
+
             for (let theta = 0; theta < 628; theta += thetaSpacing) {
                 for (let phi = 0; phi < 628; phi += phiSpacing) {
                     const cosA = Math.cos(A), sinA = Math.sin(A);
@@ -91,8 +102,8 @@
                     const z = K2 + cosA * circlex * sinphi + circley * sinA;
                     const ooz = 1 / z;
 
-                    const xp = Math.floor(canvas.width / 2 + K1 * ooz * x);
-                    const yp = Math.floor(canvas.height / 2 - K1 * ooz * y);
+                    const xp = Math.floor(donutX + K1 * ooz * x);
+                    const yp = Math.floor(donutY + K1 * ooz * y);
 
                     const position = xp + canvas.width * yp;
 
@@ -101,17 +112,17 @@
                     if (ooz > zbuffer[position]) {
                         zbuffer[position] = ooz;
                         const luminanceIndex = Math.floor(L * 8);
-                        output[position] = luminanceIndex > 0 ? chars[luminanceIndex] : ' ';
+                        output[position] = luminanceIndex > 0 ? donutChars[luminanceIndex] : ' ';
                     }
                 }
             }
 
             let k = 0;
-            for (let i = 0; i < canvas.height; i++) {
-                for (let j = 0; j < canvas.width; j++) {
+            for (let i = 0; i < donutHeight; i++) {
+                for (let j = 0; j < donutWidth; j++) {
                     const text = output[k++];
                     ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
-                    ctx.fillText(text, j * 20, i * 20);
+                    ctx.fillText(text, j * 20 + donutX, i * 20 + donutY);
                 }
             }
         }
