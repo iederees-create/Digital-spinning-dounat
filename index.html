@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Effect with Spinning Donut</title>
+    <meta name="description" content="Matrix-like animation using JavaScript and HTML">
+    <title>Matrix Effect</title>
     <style>
         * {
             margin: 0;
@@ -12,13 +13,15 @@
         }
         body {
             background-color: black;
-            overflow: hidden;
+            color: #00FF00;
+            font-family: monospace;
             height: 100vh;
-            width: 100vw;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: monospace;
+            margin: 0;
+            padding: 0;
         }
         canvas {
             display: block;
@@ -30,97 +33,46 @@
     <script>
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
+
+        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         // Matrix effect settings
         const columns = Math.floor(canvas.width / 20); // Number of columns
         const drops = Array(columns).fill(0); // Array to store drop positions
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~"; // Matrix characters
 
-        // Spinning donut effect settings
-        const R1 = 10, R2 = 20, K2 = 200, K1 = canvas.height * K2 * 3 / (8 * (R1 + R2));
-        const thetaSpacing = 10, phiSpacing = 3;
-        let A = 0, B = 0;  // Rotation angles
-        const donutChars = "._.,*#@"; // Donut characters
+        // Matrix character set
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~";
 
-        // Draw the matrix effect
-        function drawMatrix() {
+        // Function to draw matrix effect
+        function draw() {
+            // Clear screen with slight transparency
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height); // Apply fading effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Set glowing green color for matrix characters
-            ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
+            // Set glowing green color
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';  // Bright green with some transparency
             ctx.font = '20px monospace';
 
+            // Loop through each drop in the matrix
             for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
+                const text = chars[Math.floor(Math.random() * chars.length)];  // Random character
                 ctx.fillText(text, i * 20, drops[i] * 20);
 
+                // Reset drop position after it moves past the screen height
                 if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
 
+                // Move drop down
                 drops[i]++;
             }
         }
 
-        // Draw the spinning donut (3D torus)
-        function drawDonut() {
-            const output = Array(canvas.width * canvas.height / 400).fill(' '); // Array to store donut's pixels
-            const zbuffer = Array(output.length).fill(0);
-
-            const donutWidth = 60;
-            const donutHeight = 20;
-            const donutX = canvas.width / 2 - donutWidth / 2; // Center donut on screen
-            const donutY = canvas.height / 2 - donutHeight / 2;
-
-            for (let theta = 0; theta < 628; theta += thetaSpacing) {
-                for (let phi = 0; phi < 628; phi += phiSpacing) {
-                    const cosA = Math.cos(A), sinA = Math.sin(A);
-                    const cosB = Math.cos(B), sinB = Math.sin(B);
-                    const costheta = Math.cos(theta), sintheta = Math.sin(theta);
-                    const cosphi = Math.cos(phi), sinphi = Math.sin(phi);
-
-                    // 3D coordinates of torus
-                    const circlex = R2 + R1 * costheta;
-                    const circley = R1 * sintheta;
-                    const x = circlex * (cosB * cosphi + sinA * sinB * sinphi) - circley * cosA * sinB;
-                    const y = circlex * (sinB * cosphi - sinA * cosB * sinphi) + circley * cosA * cosB;
-                    const z = K2 + cosA * circlex * sinphi + circley * sinA;
-                    const ooz = 1 / z;
-
-                    const xp = Math.floor(donutX + K1 * ooz * x);
-                    const yp = Math.floor(donutY + K1 * ooz * y);
-
-                    const position = xp + canvas.width * yp;
-
-                    const L = cosphi * costheta * sinB - cosA * costheta * sinphi - sinA * sintheta + cosB * (cosA * sintheta - costheta * sinA * sinphi);
-
-                    if (ooz > zbuffer[position]) {
-                        zbuffer[position] = ooz;
-                        const luminanceIndex = Math.floor(L * 8);
-                        output[position] = luminanceIndex > 0 ? donutChars[luminanceIndex] : ' ';
-                    }
-                }
-            }
-
-            let k = 0;
-            for (let i = 0; i < donutHeight; i++) {
-                for (let j = 0; j < donutWidth; j++) {
-                    const text = output[k++];
-                    ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
-                    ctx.fillText(text, j * 20 + donutX, i * 20 + donutY);
-                }
-            }
-        }
-
-        // Animation loop to update the matrix and donut effects
+        // Animation loop to update the matrix effect
         function update() {
-            drawMatrix(); // Draw matrix as background
-            drawDonut();  // Draw donut on top
-            A += 0.1;
-            B += 0.03;
+            draw();
             requestAnimationFrame(update);
         }
 
